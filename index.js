@@ -24,11 +24,72 @@ server.get('/forecast/hourly/:lat,:lon', function (request, response){
           };
           response.status(200).json(responseObj);
         })
-        .catch(function(err){
-          console.log(err);
-          response.status(500).send({'baddddddddd'})
+        .catch(function(error){
+          console.log(error);
+          response.status(500).send({error})
   });
 });
+
+server.get('/forecast/minutely/:lat,:lon', function(request, response){
+  $http.get(baseURL + apiKey + '/' + request.params.lat+','+request.params.lon)
+        .then(function(res){
+          var responseObj = {
+            latitude: res.data.latitude,
+            longitude: res.data.longitude,
+            minutely: res.data.minutely,
+          };
+          response.status(200).json(responseObj);
+          console.log(responseObj);
+        })
+        .catch(function(error){
+          console.log(error);
+          response.status(500).send({error})
+        });
+});
+
+// server.get('/forecast/daily/:lat,:lon', function(request, response){
+//   $http.get(baseURL + apiKey + '/' + request.params.lat+','+request.params.lon)
+//         .then(function(res){
+//           var responseObj = {
+//             latitude: res.data.latitude,
+//             longitude: res.data.longitude,
+//             daily: res.data.daily,
+//           };
+//           response.status(200).json(responseObj);
+//           console.log(responseObj);
+//         })
+//         .catch(function(error){
+//           console.log(error);
+//           response.status(500).send({error})
+//         });
+// });
+
+server.get('/forecast/daily/:lat,:lon', function (request, response){
+  $http.get(baseURL + apiKey + '/' + request.params.lat + request.params.lon)
+        .then(function(res){
+          var overSummary = res.data.daily.summary;
+          var overIcon = res.data.daily.icon;
+          var dailyData = res.data.daily.data;
+          var dailyArr = [];
+          for(var i = 0; i < dailyData.length; i += 1){
+            var o ={
+            icon: dailyData[i].icon,
+            tempMax: dailyData[i].temperatureMax,
+            tempMin: dailyData[i].temperatureMin,
+            humidity: dailyData[i].humidity,
+            precipProb: dailyData[i].precipProbability
+          };
+          dailyArr.push(o);
+        }
+        var resObj = {
+          latitude: response.data.latitude,
+          longitude: response.data.longitude,
+          summary: overSummary,
+          icon: overIcon,
+          daily: dailyArr
+        };
+        })
+})
 
 //listen
 server.listen(port, function(){
