@@ -65,7 +65,8 @@ server.get('/forecast/minutely/:lat,:lon', function(request, response){
 // });
 
 server.get('/forecast/daily/:lat,:lon', function (request, response){
-  $http.get(baseURL + apiKey + '/' + request.params.lat + request.params.lon)
+
+  $http.get(baseURL + apiKey + '/' + request.params.lat + ',' + request.params.lon)
         .then(function(res){
           var overSummary = res.data.daily.summary;
           var overIcon = res.data.daily.icon;
@@ -82,14 +83,20 @@ server.get('/forecast/daily/:lat,:lon', function (request, response){
           dailyArr.push(o);
         }
         var resObj = {
-          latitude: response.data.latitude,
-          longitude: response.data.longitude,
+          latitude: res.data.latitude,
+          longitude: res.data.longitude,
           summary: overSummary,
           icon: overIcon,
           daily: dailyArr
         };
+        response.status(200).json(resObj);
         })
-})
+        .catch(function(err){
+          response.status(500).json({
+            msg:err
+          });
+        });
+      });
 
 //listen
 server.listen(port, function(){
