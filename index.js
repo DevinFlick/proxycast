@@ -3,6 +3,7 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var server = express();
 var $http = require('axios');
+var logger = require('./logger');
 
 var port = process.env.PORT || 8080;
 var apiKey = require('./config').apiKey;
@@ -12,7 +13,7 @@ var baseURL = 'https://api.forecast.io/forecast/';
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(cors());
-
+server.use(logger);
 //test route
 server.get('/forecast/hourly/:lat,:lon', function (request, response){
   $http.get(baseURL + apiKey + '/' + request.params.lat+','+request.params.lon)
