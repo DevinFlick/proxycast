@@ -81,8 +81,13 @@ server.get('/forecast/daily/:lat,:lon', function (request, response){
             icon: dailyData[i].icon,
             tempMax: dailyData[i].temperatureMax,
             tempMin: dailyData[i].temperatureMin,
+            tempMaxTime: dailyData[i].temperatureMaxTime,
+            tempMinTime: dailyData[i].temperatureMinTime,
             humidity: dailyData[i].humidity,
-            precipProb: dailyData[i].precipProbability
+            precipProb: dailyData[i].precipProbability,
+            time: dailyData[i].time,
+            sunrise: dailyData[i].sunriseTime,
+            sunset: dailyData[i].sunsetTime,
           };
           dailyArr.push(o);
         }
