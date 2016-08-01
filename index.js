@@ -88,6 +88,7 @@ server.get('/forecast/daily/:lat,:lon', function (request, response){
             time: dailyData[i].time,
             sunrise: dailyData[i].sunriseTime,
             sunset: dailyData[i].sunsetTime,
+            
           };
           dailyArr.push(o);
         }
